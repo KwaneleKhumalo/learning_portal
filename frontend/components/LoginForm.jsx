@@ -23,8 +23,9 @@ const LoginForm = () => {
         email,
         password
       })
-      console.log(response.data);
+      const {data} = response.data
       toast.success(response.data.msg)
+      console.log(data);
     } catch (error) {
       toast.error(error.response.data.msg)
       console.log(error.response.data.msg);

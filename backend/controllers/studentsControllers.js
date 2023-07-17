@@ -6,7 +6,7 @@ export const signup = async (req, res) => {
   const { firstname, lastname, email, phone, homeAddress, street, city, state, zipCode, password } = req.body
 
   const studentExist = await Student.findOne({ email })
-  const course = await Course.findById(student.registeredCourse)
+  // const course = await Course.findById(student.registeredCourse)
 
 
   if (studentExist) {
@@ -34,7 +34,7 @@ export const signup = async (req, res) => {
         student_id: student._id,
         firstname: student.firstname,
         email: student.email,
-        courses: course || student.registeredCourse
+        courses: student.registeredCourse
       }
     })
   } else {
@@ -46,16 +46,16 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
   const { email, password } = req.body
   const student = await Student.findOne({ email })
-  const course = await Course.findById(student.registeredCourse)
+  // const course = await Course.findById(student.registeredCourse)
 
   if (student && (await student.matchPassword(password))) {
     genToken(res, student._id)
     res.status(200).json({
       msg: "Student Validated",
       data: { name: student.name, email: student.email, student_id: student._id },
-      courses: {
-        course
-      }
+      // courses: {
+      //   course
+      // }
     })
   } else {
     res.status(401).json({

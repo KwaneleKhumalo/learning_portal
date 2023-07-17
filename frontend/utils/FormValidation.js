@@ -65,6 +65,6 @@ export const auth = async (firstname, lastname, email, phone, password) => {
       toast.success(response.data.msg)
     }
   } catch (err) {
-    toast.error(err.response.data.msg)
+    toast.error("err.response.data.msg")
   }
 }
