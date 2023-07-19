@@ -1,9 +1,9 @@
-import React from 'react'
+import React from "react"
 
 const Home = () => {
   return (
-    <div>
-      Home Page
+    <div className="text-center py-5">
+      <h2>Home Page</h2>
     </div>
   )
 }

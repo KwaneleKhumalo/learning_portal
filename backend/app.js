@@ -1,18 +1,25 @@
 import express from "express"
 import dotenv from "dotenv"
-import cookieParser from "cookie-parser"
 dotenv.config()
 import cors from 'cors'
+import cookieParser from "cookie-parser"
+
 import courseRouter from "./routes/courseRoute.js"
 import studentRouter from "./routes/studentRoutes.js"
 import { connectToDb } from "./utils/dbConnection.js"
 const PORT = 8080
 
 const app = express()
-app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-app.use(cors())
+
+app.use(
+  cors({
+    origin: "http://127.0.0.1:5173",
+    credentials: true
+  })
+)
+app.use(cookieParser())
 
 app.get("/", (req, res) => {
   res.json({

@@ -1,6 +1,6 @@
 import Student from "../models/studentModels.js"
 import Course from "../models/coursesModel.js"
-import { genToken } from "../utils/jwtAuth.js"
+import genToken from "../utils/jwtAuth.js"
 
 export const signup = async (req, res) => {
   const { firstname, lastname, email, phone, homeAddress, street, city, state, zipCode, password } = req.body
@@ -45,17 +45,16 @@ export const signup = async (req, res) => {
 
 export const login = async (req, res) => {
   const { email, password } = req.body
-  const student = await Student.findOne({ email })
-  // const course = await Course.findById(student.registeredCourse)
+  const student = await Student.findOne({ email }).populate('registeredCourse')
+  // const course = student ? await Course.findById(student.registeredCourse) : [];
 
-  if (student && (await student.matchPassword(password))) {
-    genToken(res, student._id)
+  if (student && (await student.matchPassword(password))) { 
+    const studentId = student._id.toString(); // Convert ObjectId to string
+    genToken(res, studentId); // Pass the string studentId to genToken
     res.status(200).json({
       msg: "Student Validated",
-      data: { name: student.name, email: student.email, student_id: student._id },
-      // courses: {
-      //   course
-      // }
+      data: { name: student.name, email: student.email, student_id: studentId },
+      courses: {course: student.registeredCourse}
     })
   } else {
     res.status(401).json({
@@ -63,6 +62,14 @@ export const login = async (req, res) => {
     })
   }
 }
+
+
+
+
+
+
+
+
 
 export const logout = async (req, res) => {
   res.cookie("authentication", "", {

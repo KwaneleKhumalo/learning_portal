@@ -1,37 +1,45 @@
-import {useState } from 'react'
-import { Form, Row, Col, Button } from 'react-bootstrap'
+import { useEffect, useState } from "react"
+import { Form, Row, Col, Button } from "react-bootstrap"
 import axios from "axios"
 import { toast } from "react-toastify"
-import { Link } from 'react-router-dom'
-
+import { Link } from "react-router-dom"
 
 const LoginForm = () => {
-
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
-  const handleLogin = async (e) => {
+  const handleLogin = async e => {
     e.preventDefault()
 
     if (email === "" || password === "") {
-      toast.error('Enter Email And/or Password')
+      toast.error("Enter Email And/or Password")
     }
 
+    const config = {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include"
+    }
 
     try {
-      const response = await axios.post("http://localhost:8080/api/v1/student/login/auth", {
-        email,
-        password
-      })
-      const {data} = response.data
+      const response = await axios.post(
+        "http://localhost:8080/api/v1/student/login/auth",
+        {
+          email,
+          password
+        },
+        config
+      )
+      const { data, courses } = response.data
       toast.success(response.data.msg)
-      console.log(data);
+      console.log(data, courses)
     } catch (error) {
       toast.error(error.response.data.msg)
-      console.log(error.response.data.msg);
+      console.log(error.response.data.msg)
     }
-    setEmail('')
-    setPassword('')
+    setEmail("")
+    setPassword("")
   }
 
   return (
@@ -51,9 +59,9 @@ const LoginForm = () => {
             Submit
           </Button>
           <Col>
-              <Link className="nav-link text-primary text-center" to={"/register"}>
-                Register for an account
-              </Link>
+            <Link className="nav-link text-primary text-center" to={"/register"}>
+              Register for an account
+            </Link>
           </Col>
         </Form>
       </Col>
