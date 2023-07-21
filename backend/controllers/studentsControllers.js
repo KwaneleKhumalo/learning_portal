@@ -1,7 +1,6 @@
 import Student from "../models/studentModels.js"
 import Course from "../models/coursesModel.js"
 import genToken from "../utils/jwtAuth.js"
-import { protect } from "../middleware/authMiddleware.js"
 
 export const signup = async (req, res) => {
   const { firstname, lastname, email, phone, homeAddress, street, city, state, zipCode, password } = req.body
@@ -46,7 +45,7 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
   const { email, password } = req.body
   const student = await Student.findOne({ email }).populate("registeredCourse")
-  const course = student ? await Course.findById(student.registeredCourse) : "No Courses Yet.";
+  const course = student ? await Course.findById(student.registeredCourse) : "No Courses Yet."
 
   if (!student) {
     return res.status(401).json({
@@ -58,7 +57,7 @@ export const login = async (req, res) => {
 
     res.status(200).json({
       msg: "Student Validated",
-      data: { name: student.name, email: student.email, student_id: studentId },
+      data: { name: student.firstname, email: student.email, student_id: studentId },
       courses: { course }
     })
   } else {
@@ -116,10 +115,11 @@ export const registerForClass = async (req, res) => {
 
 export const studentProfile = async (req, res) => {
   const student = await Student.findById(req.params.studentId)
-  const course = (await Course.findById(student.registeredCourse)) || ""
-  const { firstname, lastname, email, phone, homeAddress, street, city, state, zipCode, createdAt, updatedAt } = student
+  const course = (await Course.findById(student.registeredCourse)) || []
 
-  const { name } = course
+  const { firstname, lastname, email, phone, homeAddress, street, city, state, zipCode } = student
+
+  const { name, video, image } = course
 
   if (student) {
     return res.status(200).json({
@@ -134,13 +134,14 @@ export const studentProfile = async (req, res) => {
         city,
         state,
         zipCode,
-        student_Since: createdAt,
-        last_Update: updatedAt
+        student_Since: student.createdAt,
+        last_Update: student.updatedAt
       },
       courses: {
-        course_Id: course._id,
-        course_Name: name,
-        course_last_updated: course.updatedAt
+        name,
+        video,
+        thumbnail: image,
+        last_Update: course.updatedAt
       }
     })
   } else {
@@ -154,24 +155,36 @@ export const updateStudent = async (req, res) => {
   if (!student) {
     res.status(401)
     throw new Error(`Something went wrong updating user.`)
-  }
+  } else {
+    student.firstname = req.body.firstname || student.firstname
+    student.lastname = req.body.lastname || student.lastname
+    student.email = req.body.email || student.email
+    student.phone = req.body.phone || student.phone
+    student.homeAddress = req.body.homeAddress || student.homeAddress
+    student.street = req.body.street || student.street
+    student.city = req.body.city || student.city
+    student.state = req.body.state || student.state
+    student.zipCode = req.body.zipCode || student.zipCode
 
-  student.firstname = req.body.firstname || student.firstname
-  student.lastname = req.body.lastname || student.lastname
-  student.email = req.body.email || student.email
-  student.phone = req.body.phone || student.phone
-  student.homeAddress = req.body.homeAddress || student.homeAddress
-  student.street = req.body.street || student.street
-  student.city = req.body.city || student.city
-  student.state = req.body.state || student.state
-  student.zipCode = req.body.zipCode || student.zipCode
-
-  const updatedStudent = await student.save()
-
-  res.status(200).json({
-    msg: `Account updated successfully.`,
-    data: {
-      updatedStudent
+    if (req.body.password) {
+      student.password = req.body.password
     }
-  })
+
+    const updateStudent = await student.save()
+
+    res.status(200).json({
+      msg: `Account updated successfully.`,
+      data: {
+        firstname: updateStudent.firstname,
+        lastname: updateStudent.lastname,
+        email: updateStudent.email,
+        phone: updateStudent.phone,
+        homeAddress: updateStudent.homeAddress,
+        street: updateStudent.street,
+        city: updateStudent.city,
+        state: updateStudent.state,
+        zipCode: updateStudent.zipCode
+      }
+    })
+  }
 }

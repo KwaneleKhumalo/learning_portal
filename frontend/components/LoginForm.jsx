@@ -7,6 +7,7 @@ import { Link } from "react-router-dom"
 const LoginForm = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [userInfo, setUserInfo] = useState("")
 
   const handleLogin = async e => {
     e.preventDefault()
@@ -33,7 +34,7 @@ const LoginForm = () => {
       )
       const { data, courses } = response.data
       toast.success(response.data.msg)
-      console.log(data, courses)
+      setUserInfo(data)
     } catch (error) {
       toast.error(error.response.data.msg)
       console.log(error.response.data.msg)
@@ -41,6 +42,8 @@ const LoginForm = () => {
     setEmail("")
     setPassword("")
   }
+
+      console.log(userInfo)
 
   return (
     <Row>
