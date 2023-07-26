@@ -1,8 +1,8 @@
 import express from "express"
 import dotenv from "dotenv"
+import cookieParser from "cookie-parser"
 dotenv.config()
 import cors from 'cors'
-import cookieParser from "cookie-parser"
 
 import courseRouter from "./routes/courseRoute.js"
 import studentRouter from "./routes/studentRoutes.js"
@@ -12,6 +12,8 @@ const PORT = 8080
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+app.use(cookieParser())
+
 
 app.use(
   cors({
@@ -19,7 +21,6 @@ app.use(
     credentials: true
   })
 )
-app.use(cookieParser())
 
 app.get("/", (req, res) => {
   res.json({

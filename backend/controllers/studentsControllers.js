@@ -57,7 +57,7 @@ export const login = async (req, res) => {
 
     res.status(200).json({
       msg: "Student Validated",
-      data: { name: student.firstname, email: student.email, student_id: studentId },
+      data: { name: student.firstname, lastname: student.lastname, email: student.email, student_id: studentId },
       courses: { course }
     })
   } else {

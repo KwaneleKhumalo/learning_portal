@@ -5,7 +5,7 @@ const studentRouter = Router()
 
 studentRouter.route("/registration/auth").post(signup)
 studentRouter.route("/login/auth").post(login)
-studentRouter.route("/auth/logout").post( protect, logout)
+studentRouter.route("/auth/logout").post( logout)
 studentRouter.route("/profile/:studentId").get(protect, studentProfile).put( protect, updateStudent)
 studentRouter.route('/:studentId/auth/class-registration/:courseId').post(protect, registerForClass)
 

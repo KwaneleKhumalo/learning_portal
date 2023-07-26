@@ -1,13 +1,33 @@
 import { useEffect, useState } from "react"
+import { Link, useLocation, useNavigate } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
+import { useLoginMutation } from "../src/slices/studentsApiSlice"
+import { setCredentials } from "../src/slices/authSlice"
 import { Form, Row, Col, Button } from "react-bootstrap"
-import axios from "axios"
 import { toast } from "react-toastify"
-import { Link } from "react-router-dom"
+
 
 const LoginForm = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [userInfo, setUserInfo] = useState("")
+
+  const dispatch = useDispatch()
+  const navigate = useNavigate();
+
+  const [login, { isLoading }] = useLoginMutation();
+
+  const { userInfo } = useSelector((state => state.auth))
+  
+  const { search } = useLocation()
+  const searchParams = new URLSearchParams(search);
+  const redirect = searchParams.get('redirect') || '/dashboard'
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate(redirect)
+    }
+  }, [userInfo, redirect, navigate])
+
 
   const handleLogin = async e => {
     e.preventDefault()
@@ -16,39 +36,24 @@ const LoginForm = () => {
       toast.error("Enter Email And/or Password")
     }
 
-    const config = {
-      headers: {
-        "Content-Type": "application/json"
-      },
-      credentials: "include"
-    }
-
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/v1/student/login/auth",
-        {
-          email,
-          password
-        },
-        config
-      )
-      const { data, courses } = response.data
-      toast.success(response.data.msg)
-      setUserInfo(data)
+      const response = await login({ email, password }).unwrap()
+      dispatch(setCredentials({ ...response }))
+      navigate(redirect)
+      toast.success("Welcome Back!")
+      setEmail("")
+      setPassword("")
     } catch (error) {
-      toast.error(error.response.data.msg)
-      console.log(error.response.data.msg)
+      toast.error(error.data.msg)
+      console.log(error)
     }
-    setEmail("")
-    setPassword("")
+    
   }
-
-      console.log(userInfo)
 
   return (
     <Row>
       <h1 className="text-center mt-5 mb-5">Sign In</h1>
-      <Col className="mx-auto border p-5 rounded shadow" md={6} lg={3}>
+      <Col className="mx-auto p-5 rounded shadow" md={6} lg={3}>
         <Form onSubmit={handleLogin}>
           <Form.Group className="mb-3" controlId="email">
             <Form.Label>Email address: </Form.Label>
@@ -58,7 +63,7 @@ const LoginForm = () => {
             <Form.Label>Password: </Form.Label>
             <Form.Control type="password" placeholder="Enter Password" value={password} onChange={e => setPassword(e.target.value)} />
           </Form.Group>
-          <Button variant="success" type="submit">
+          <Button variant="success" type="submit" disabled={isLoading}>
             Submit
           </Button>
           <Col>

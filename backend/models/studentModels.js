@@ -6,14 +6,18 @@ const studentSchema = new Schema(
   {
     firstname: {
       type: String,
+      trim: true,
       required: true
     },
     lastname: {
       type: String,
+      trim: true,
       required: true
     },
     email: {
       type: String,
+      trim: true,
+      match:[/.+\@.+\..+/, "Please fill a valid email address"],
       required: true,
       unique: true
     },
@@ -22,19 +26,19 @@ const studentSchema = new Schema(
       required: true
     },
     homeAddress: {
-      type: Number,
+      type: Number
     },
     street: {
-      type: String,
+      type: String
     },
     city: {
-      type: String,
+      type: String
     },
     state: {
-      type: String,
+      type: String
     },
     zipCode: {
-      type: Number,
+      type: Number
     },
     password: {
       type: String,

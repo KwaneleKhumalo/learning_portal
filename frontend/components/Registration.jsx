@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react"
 import { Form, Row, Col, Button } from "react-bootstrap"
 import { validation, auth } from "../utils/FormValidation"
-import { toast } from "react-toastify"
-import { Link } from "react-router-dom"
-import axios from "axios"
+import { Link, useNavigate, useLocation } from "react-router-dom"
 
 const Registration = () => {
 
@@ -13,6 +11,11 @@ const Registration = () => {
   const [phone, setPhone] = useState('')
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState('')
+
+  const navigate = useNavigate()
+  const { search } = useLocation()
+  const searchParams = new URLSearchParams(search)
+  const redirect = searchParams.get("redirect") || "/dashboard"
 
 
   const handleRegistration = async (e) => {
@@ -25,6 +28,7 @@ const Registration = () => {
     setPhone("")
     setPassword("")
     setConfirmPassword("")
+    navigate(redirect)
   }
 
   return (
