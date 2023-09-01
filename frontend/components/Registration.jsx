@@ -15,7 +15,7 @@ const Registration = () => {
   const navigate = useNavigate()
   const { search } = useLocation()
   const searchParams = new URLSearchParams(search)
-  const redirect = searchParams.get("redirect") || "/dashboard"
+  const redirect = searchParams.get("redirect") || "/login"
 
 
   const handleRegistration = async (e) => {

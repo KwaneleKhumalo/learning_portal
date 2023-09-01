@@ -6,7 +6,6 @@ export const signup = async (req, res) => {
   const { firstname, lastname, email, phone, homeAddress, street, city, state, zipCode, password } = req.body
 
   const studentExist = await Student.findOne({ email })
-  // const course = await Course.findById(student.registeredCourse)
 
   if (studentExist) {
     res.status(403).json({ msg: "A student with this email already exist. Please login." })
