@@ -18,7 +18,7 @@ const NavMenu = () => {
       await logoutApiCall().unwrap()
       dispatch(logout())
       navigate('/login')
-      toast.warning('Logged Out Successfully!')
+      // toast.warning('Logged Out Successfully!')
     } catch (error) {
       console.log(error);
     }
@@ -28,7 +28,7 @@ const NavMenu = () => {
     <Navbar collapseOnSelect expand="md" bg="secondary" variant="dark" className="px-5" style={{zIndex: "2"}}>
       <>
         <Link to="/" className="navbar-brand px-5">
-          Home
+          Website
         </Link>
         <Nav className="justify-content-end align-items-center ms-auto px-5">
           {userInfo ? (

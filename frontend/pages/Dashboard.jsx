@@ -1,11 +1,12 @@
 import { useSelector } from "react-redux"
-import { Link, useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import SideNav from "../components/SideNav"
 
 const Dashboard = () => {
   const { userInfo } = useSelector(state => state.auth)
+  const [userData, setUserData] = useState("")
 
   const navigate = useNavigate()
   const { search } = useLocation()
@@ -17,13 +18,18 @@ const Dashboard = () => {
       navigate(redirect)
       toast.warning(`You're logged Out.`)
     }
-  }, [userInfo, redirect, navigate])
+    if (userInfo) {
+      setUserData(userInfo.data)
+    }
+  }, [userInfo, userData, redirect, navigate])
+
+  console.log(userData.name);
 
   return (
     <>
       <SideNav />
-      <h1 className="text-center mt-5">Hello, {userInfo.data.name }</h1>
-    </> 
+      <h1 className="text-center mt-5">Hello, {userData.name}</h1>
+    </>
   )
 }
 
