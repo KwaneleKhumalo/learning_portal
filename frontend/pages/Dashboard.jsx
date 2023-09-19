@@ -23,7 +23,6 @@ const Dashboard = () => {
     }
   }, [userInfo, userData, redirect, navigate])
 
-  console.log(userData.name);
 
   return (
     <>

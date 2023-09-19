@@ -10,6 +10,7 @@ import RegistrationPage from "../pages/RegistrationPage.jsx"
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min'
 import Dashboard from "../pages/Dashboard.jsx"
+import ProfilePage from "../pages/ProfilePage.jsx"
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -18,6 +19,7 @@ const router = createBrowserRouter(
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<RegistrationPage />} />
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/profile" element={<ProfilePage />} />
     </Route>
   )
 )

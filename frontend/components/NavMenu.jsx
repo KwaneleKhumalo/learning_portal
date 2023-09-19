@@ -18,7 +18,6 @@ const NavMenu = () => {
       await logoutApiCall().unwrap()
       dispatch(logout())
       navigate('/login')
-      // toast.warning('Logged Out Successfully!')
     } catch (error) {
       console.log(error);
     }
